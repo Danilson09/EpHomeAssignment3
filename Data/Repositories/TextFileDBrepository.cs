@@ -1,9 +1,8 @@
 ﻿using Data.Context;
 using Domain.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+
 
 namespace Data.Repositories
 {
@@ -11,9 +10,10 @@ namespace Data.Repositories
     {
         private FileSharingContext Context;
 
-        public TextFileDBrepository(FileSharingContext _Context)
+       
+        public TextFileDBrepository(FileSharingContext _context)
         {
-            _Context = Context;
+            Context = _context;
         }
 
         public void CreateFile(TextFileModel textFile)
@@ -33,14 +33,6 @@ namespace Data.Repositories
             ogFile.Data = changes;
             ogFile.LastUpdated = updated.LastUpdated;
             ogFile.LastEditedBy = updated.LastEditedBy;
-            Context.SaveChanges();
-        }
-
-
-        public void ShareFile(int Id, string Recipient)
-        {
-            var recipient = Context.AclModels.SingleOrDefault(x => x.UserName.Equals(Recipient));
-            recipient.Id = Id;
             Context.SaveChanges();
         }
 

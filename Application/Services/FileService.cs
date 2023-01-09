@@ -9,21 +9,14 @@ namespace Application.Services
 {
     public class FileService
     {
-        private TextFileDBrepository TextFileDBRepository { get; set; }
+        private TextFileDBrepository TextFileDBrepository { get; set; }
         public FileService(TextFileDBrepository _textFileDBRepository)
         {
-            TextFileDBRepository = _textFileDBRepository;
+            TextFileDBrepository = _textFileDBRepository;
         }
-
-
-
-
-        public FileSharingContext context;
-
-
         public IQueryable<TextFileModel> GetFilesEntry()
         {
-            var result = from file in TextFileDBRepository.GetFiles()
+            var result = from file in TextFileDBrepository.GetFiles()
                          select new TextFileModel()
                          {
                              FileName = file.FileName,
@@ -43,15 +36,9 @@ namespace Application.Services
             return GetFilesEntry().SingleOrDefault(file => file.FileName == name);
         }
 
-        public FileService(FileSharingContext _context)
-        {
-            context = _context;
-        }
-
-
         public IQueryable<AclModel> GetPermissions()
         {
-            var permissions = from permission in TextFileDBRepository.GetPermissions()
+            var permissions = from permission in TextFileDBrepository.GetPermissions()
                               select new AclModel()
                               {
                                   Permissions = permission.Permissions
@@ -61,14 +48,14 @@ namespace Application.Services
 
         }
 
-        public void CreateNewFile(Guid fileName, DateTime uploadedOn, string data, string authorName, string path)
+        public Guid CreateNewFile(Guid fileName, DateTime uploadedOn, string data, string authorName, string path)
         {
-            if (TextFileDBRepository.GetFiles().Where(x => x.FileName == fileName).Count() > 0)
+            if (TextFileDBrepository.GetFiles().Where(x => x.FileName == fileName).Count() > 0)
             {
                 throw new Exception("File exists. change file name");
             }
 
-            TextFileDBRepository.CreateFile(new TextFileModel()
+            TextFileDBrepository.CreateFile(new TextFileModel()
             {
 
                 AuthorName = authorName,
@@ -77,6 +64,7 @@ namespace Application.Services
                 Data = data,
                 FilePath = path
             });
+            return fileName;
         }
 
         public void EditFile(Guid name, string UpdatedData)
@@ -84,7 +72,7 @@ namespace Application.Services
 
 
 
-            TextFileDBRepository.EditFile(name, UpdatedData, new TextFileModel()
+            TextFileDBrepository.EditFile(name, UpdatedData, new TextFileModel()
             {
                 FileName = name,
                 LastUpdated = DateTime.Now,
@@ -93,15 +81,7 @@ namespace Application.Services
             });
         }
 
-        public void ShareFile(int id, string Recipient, AclModel file)
-        {
-            TextFileDBRepository.ShareFile(id, Recipient);
-            {
-                id = file.Id;
-                Recipient = file.UserName;
-            }
-
-        }
+  
 
 
 
