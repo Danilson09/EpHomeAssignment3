@@ -36,36 +36,37 @@ namespace Application.Services
             return GetFilesEntry().SingleOrDefault(file => file.FileName == name);
         }
 
-        public IQueryable<AclModel> GetPermissions()
+        public Guid CreateNewFile(Guid Name,string content, string authorName, string path = "")
         {
-            var permissions = from permission in TextFileDBrepository.GetPermissions()
-                              select new AclModel()
-                              {
-                                  Permissions = permission.Permissions
-
-                              };
-            return permissions;
-
-        }
-
-        public Guid CreateNewFile(Guid fileName, DateTime uploadedOn, string data, string authorName, string path)
-        {
-            if (TextFileDBrepository.GetFiles().Where(x => x.FileName == fileName).Count() > 0)
+            if (TextFileDBrepository.GetFiles().Where(x => x.FileName == Name).Count() > 0)
             {
                 throw new Exception("File exists. change file name");
             }
 
             TextFileDBrepository.CreateFile(new TextFileModel()
             {
-
+                FileName = Name,
+                UploadedOn = DateTime.Now,
+                Data = content,
                 AuthorName = authorName,
-                UploadedOn = uploadedOn,
-                FileName = fileName,
-                Data = data,
-                FilePath = path
+                Path = path,
+                
             });
-            return fileName;
+            return Name;
         }
+
+        public void CreatePermissions(Guid Name, string UserName, bool Permission)
+        {
+            var file = GetFilesEntry().SingleOrDefault(x => x.FileName == Name);
+            TextFileDBrepository.CreatePermissions(new Domain.Models.AclModel()
+            {
+                FileName = Name,
+                Permissions = Permission,
+                UserName = UserName
+            });
+        }
+
+
 
         public void EditFile(Guid name, string UpdatedData)
         {

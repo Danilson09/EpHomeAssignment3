@@ -16,9 +16,6 @@ namespace Domain.Models
         [Required]
         public DateTime UploadedOn { get; set; }
 
-
-
-
         [Required]
         public string AuthorName { get; set; }
         [Required]
@@ -29,8 +26,7 @@ namespace Domain.Models
         [Required]
         public string Data { get; set; }
 
-        public string DigitalSignature { get; set; }
-        public string FilePath { get; set; }
+        public string Path { get; set; }
 
     }
 }

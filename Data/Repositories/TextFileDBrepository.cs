@@ -27,7 +27,6 @@ namespace Data.Repositories
         public void EditFile(Guid filename, string changes, TextFileModel updated)
         {
             var ogFile = GetFile(updated.FileName);
-
             ogFile.FileName = filename;
             ogFile.UploadedOn = DateTime.Now;
             ogFile.Data = changes;
@@ -46,15 +45,10 @@ namespace Data.Repositories
             return GetFiles().SingleOrDefault(x => x.FileName == filename);
         }
 
-        public void CreatePermissions(AclModel aclModel)
+        public void CreatePermissions(AclModel acl)
         {
-            Context.AclModels.Add(aclModel);
+            Context.AclModels.Add(acl);
             Context.SaveChanges();
-        }
-
-        public IQueryable<AclModel> GetPermissions()
-        {
-            return Context.AclModels;
         }
 
     }

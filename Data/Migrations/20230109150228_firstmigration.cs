@@ -56,8 +56,7 @@ namespace Data.Migrations
                     LastEditedBy = table.Column<string>(nullable: false),
                     LastUpdated = table.Column<DateTime>(nullable: true),
                     Data = table.Column<string>(nullable: false),
-                    DigitalSignature = table.Column<string>(nullable: true),
-                    FilePath = table.Column<string>(nullable: true)
+                    Path = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

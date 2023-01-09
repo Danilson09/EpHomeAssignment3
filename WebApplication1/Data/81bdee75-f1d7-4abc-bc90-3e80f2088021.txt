@@ -1,0 +1,36 @@
+tcp/ip Model
+
+app layer
+transport layer
+internet layer- ip and icmp(sends error msgs)
+network access layer- has data link and physical
+
+osi model
+
+app layers - user interface
+presentation layer- presents data,handles proccesses(encryption)
+session- seperates app data
+
+transport - provides delivery,error correction before retransmit
+network- logic adressing for routers for path determination ip
+data link- combines packats into bytes and bytes into frames
+-provides access to media using mac
+- performs error detection
+
+physical- moves bits between devices
+specifies voltage,wire speed
+define how data transfers through wires
+determine how to rebuild data stream
+
+tcp handshake
+udp connectionless
+
+0 to 1023 well known ports : ftp,telnet,http
+1024-49151: alt http
+
+
+0 to 1023 well known ports : ftp,telnet,http
+1024-49151: alt http
+
+networks are 7-14-21 ^2
+hosts are 24-16-8 ^3
