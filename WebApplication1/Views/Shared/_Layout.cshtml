@@ -31,6 +31,21 @@
         </nav>
     </header>
     <div class="container">
+        @if (string.IsNullOrEmpty(ViewBag.Message) == false)
+        {
+            <div class="alert alert-primary" role="alert">
+                @ViewBag.Message
+            </div>
+        }
+
+        else if (string.IsNullOrEmpty(ViewBag.Error) == false)
+        {
+            <div class="alert alert-danger" role="alert">
+                @ViewBag.Error
+            </div>
+        }
+
+
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

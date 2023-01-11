@@ -23,6 +23,11 @@ namespace WebApplication1.Controllers
             this.textFileDBrepository = textFileDBrepository;
             this.webHostEnvironment = _webHostEnvironment;
         }
+        public IActionResult List()
+        {
+            var list = Service.GetFilesEntry();
+            return View(list);
+        }
 
         public IActionResult Create()
         {
@@ -47,15 +52,59 @@ namespace WebApplication1.Controllers
                     file.Data = string.Join("", lines);
                 }
                 var create = Service.CreateNewFile(Guid.NewGuid(), file.Data, file.AuthorName, file.Path);
-                ViewBag.msg = "File was created successfully";
+                ViewBag.Message = "File was created successfully";
                 Service.CreatePermissions(create, file.AuthorName, true);
-                
+
             }
             catch (Exception e)
             {
-                ViewBag.msg = "File was not created please check inputs";
+                ViewBag.Error = "File was not created please check inputs";
             }
             return View();
+        }
+
+
+        [HttpGet]
+        public IActionResult EditFile(Guid FileID)
+        {
+            var ogFile = Service.GetFileEntry(FileID);
+            CreateViewModel CreateViewModel = new CreateViewModel()
+            {
+                Data = ogFile.Data
+            };
+            return View(CreateViewModel);
+        }
+        [HttpPost]
+        //[Authorize]
+        public IActionResult EditFile(Guid FileID, string UpdatedData, CreateViewModel CreateViewModel)
+        {
+            var CurrentUser = User.Identity.Name;
+            try
+            {
+                if (textFileDBrepository.GetPermissions().Where(x => x.FileName == FileID && x.UserName == CurrentUser && x.Permissions == true).FirstOrDefault() != null)
+                {
+                    CreateViewModel.FileName = FileID;
+                    CreateViewModel.LastEditedBy = User.Identity.Name;
+                    CreateViewModel.Data = UpdatedData;
+                    Service.EditFile(FileID,UpdatedData,CreateViewModel);
+
+
+                    ViewBag.Message = "Updated";
+                }
+                else
+                {
+                    throw new Exception("Not updated");
+
+                }
+            }
+
+            catch (Exception ex)
+            {
+                ViewBag.Error = "Not Updated";
+
+                
+            }
+            return RedirectToAction("List");
         }
     }
 }

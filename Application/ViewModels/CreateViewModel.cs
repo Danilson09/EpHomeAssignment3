@@ -8,12 +8,13 @@ namespace Application.ViewModels
 {
     public class CreateViewModel
     {
+        public Guid FileName { get; set; }
 
-
-  
-        [Required]
-        public string AuthorName { get; set; }
+        public string Data { get; set; }
+        public string Author { get; set; }
        
-        public string FilePath { get; set; }
+        public DateTime UploadedOn { get; set; }
+        public string LastEditedBy { get; set; }
+        public Nullable<DateTime> LastUpdated { get; set; }
     }
 }

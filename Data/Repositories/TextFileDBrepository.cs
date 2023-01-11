@@ -50,6 +50,10 @@ namespace Data.Repositories
             Context.AclModels.Add(acl);
             Context.SaveChanges();
         }
+        public IQueryable<AclModel> GetPermissions()
+        {
+            return Context.AclModels;
+        }
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using Data.Context;
+﻿
+using Application.ViewModels;
 using Data.Repositories;
 using Domain.Models;
 using System;
@@ -16,43 +17,43 @@ namespace Application.Services
         }
         public IQueryable<TextFileModel> GetFilesEntry()
         {
-            var result = from file in TextFileDBrepository.GetFiles()
+            var File = from f in TextFileDBrepository.GetFiles()
                          select new TextFileModel()
                          {
-                             FileName = file.FileName,
-                             AuthorName = file.AuthorName,
-                             UploadedOn = file.UploadedOn,
-                             Data = file.Data,
-                             LastEditedBy = file.LastEditedBy,
-                             LastUpdated = file.LastUpdated,
+                             FileName = f.FileName,
+                             AuthorName = f.AuthorName,
+                             UploadedOn = f.UploadedOn,
+                             Data = f.Data,
+                             LastEditedBy = f.LastEditedBy,
+                             LastUpdated = f.LastUpdated,
 
                          };
-            return result;
+            return File;
         }
 
 
-        public TextFileModel GetFileEntry(Guid name)
+        public TextFileModel GetFileEntry(Guid FileID)
         {
-            return GetFilesEntry().SingleOrDefault(file => file.FileName == name);
+            return GetFilesEntry().SingleOrDefault(file => file.FileName == FileID);
         }
 
-        public Guid CreateNewFile(Guid Name,string content, string authorName, string path = "")
+        public Guid CreateNewFile(Guid name,string content, string authorName, string path = "")
         {
-            if (TextFileDBrepository.GetFiles().Where(x => x.FileName == Name).Count() > 0)
+            if (TextFileDBrepository.GetFiles().Where(x => x.FileName == name).Count() > 0)
             {
                 throw new Exception("File exists. change file name");
             }
 
             TextFileDBrepository.CreateFile(new TextFileModel()
             {
-                FileName = Name,
+                FileName = name,
                 UploadedOn = DateTime.Now,
                 Data = content,
                 AuthorName = authorName,
                 Path = path,
                 
             });
-            return Name;
+            return name;
         }
 
         public void CreatePermissions(Guid Name, string UserName, bool Permission)
@@ -66,23 +67,30 @@ namespace Application.Services
             });
         }
 
-
-
-        public void EditFile(Guid name, string UpdatedData)
+        public IQueryable<AclModel> GetPermissions()
         {
+            var GetPermissions = from perm in TextFileDBrepository.GetPermissions()
+                                 select new AclModel()
+                                 {
+                                     Id = perm.Id
+                                 };
+            return GetPermissions;
+        }
 
-
-
+        public void EditFile(Guid name, string UpdatedData,CreateViewModel textfile)
+        {
             TextFileDBrepository.EditFile(name, UpdatedData, new TextFileModel()
             {
                 FileName = name,
+                
+                Data = UpdatedData,
                 LastUpdated = DateTime.Now,
-                Data = UpdatedData
+                LastEditedBy = textfile.LastEditedBy
 
             });
         }
 
-  
+
 
 
 

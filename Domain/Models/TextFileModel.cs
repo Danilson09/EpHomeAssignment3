@@ -8,9 +8,8 @@ namespace Domain.Models
 {
     public class TextFileModel
     {
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid FileName { get; set; }
 
         [Required]
@@ -18,12 +17,11 @@ namespace Domain.Models
 
         [Required]
         public string AuthorName { get; set; }
-        [Required]
+        
 
         public string LastEditedBy { get; set; }
         public Nullable<DateTime> LastUpdated { get; set; }
 
-        [Required]
         public string Data { get; set; }
 
         public string Path { get; set; }
