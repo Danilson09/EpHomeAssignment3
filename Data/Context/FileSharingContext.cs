@@ -17,5 +17,7 @@ namespace Data.Context
         public DbSet<AclModel> AclModels { get; set; }
         public DbSet<TextFileModel> TextFileModels { get; set; }
 
+        public DbSet<LogModel> LogModels { get; set; }
+
     }
 }

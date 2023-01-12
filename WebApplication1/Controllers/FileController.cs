@@ -17,11 +17,13 @@ namespace WebApplication1.Controllers
         private FileService Service;
         private TextFileDBrepository textFileDBrepository;
         private IWebHostEnvironment webHostEnvironment;
-        public FileController(FileService _fileService, TextFileDBrepository textFileDBrepository, IWebHostEnvironment _webHostEnvironment)
+        private LogService LogService;
+        public FileController(FileService _fileService, TextFileDBrepository textFileDBrepository, IWebHostEnvironment _webHostEnvironment,LogService _logService)
         {
             Service = _fileService;
             this.textFileDBrepository = textFileDBrepository;
             this.webHostEnvironment = _webHostEnvironment;
+            this.LogService = _logService;
         }
         public IActionResult List()
         {
@@ -54,11 +56,13 @@ namespace WebApplication1.Controllers
                 var create = Service.CreateNewFile(Guid.NewGuid(), file.Data, file.AuthorName, file.Path);
                 ViewBag.Message = "File was created successfully";
                 Service.CreatePermissions(create, file.AuthorName, true);
-
+                LogService.Log("File created", HttpContext.Connection.RemoteIpAddress.ToString(), file.AuthorName);
             }
+
             catch (Exception e)
             {
                 ViewBag.Error = "File was not created please check inputs";
+                LogService.Log(e, HttpContext.Connection.RemoteIpAddress.ToString(), file.AuthorName);
             }
             return View();
         }
@@ -79,6 +83,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult EditFile(Guid FileID, string changedata, CreateViewModel createView)
         {
+            string user = User.Identity.Name;
             try
             {
                 if (textFileDBrepository.GetPermissions().Where(x => x.FileName == FileID && x.UserName == User.Identity.Name && x.Permissions == true).FirstOrDefault() != null)
@@ -88,6 +93,7 @@ namespace WebApplication1.Controllers
                     changedata = createView.Data;
                     
                     Service.EditFile(FileID, changedata, createView);
+                    LogService.Log("File Edited", HttpContext.Connection.RemoteIpAddress.ToString(), user);
                 }
                 else
                 {
@@ -96,11 +102,12 @@ namespace WebApplication1.Controllers
                 }
             }
 
-            catch (Exception ex)
+            catch (Exception execption)
             {
                 
                 ViewBag.Error = "File was not updated";
-               
+                LogService.Log(execption, HttpContext.Connection.RemoteIpAddress.ToString(), user);
+
             }
             return RedirectToAction("List");
         }

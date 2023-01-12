@@ -1,6 +1,7 @@
 using Application.Services;
 using Data.Context;
 using Data.Repositories;
+using Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -40,6 +41,10 @@ namespace WebApplication1
 
             services.AddScoped<FileService>();
             services.AddScoped<TextFileDBrepository>();
+            services.AddScoped<LogService>();
+
+            //services.AddScoped<IlogRepository, LogDBrepository>();
+            services.AddScoped<IlogRepository, EmailRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
