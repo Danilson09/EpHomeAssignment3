@@ -79,14 +79,12 @@ namespace Application.Services
 
         public void EditFile(Guid name, string UpdatedData,CreateViewModel textfile)
         {
-            TextFileDBrepository.EditFile(name, UpdatedData, new TextFileModel()
+            TextFileDBrepository.EditFile(name, UpdatedData, new Domain.Models.TextFileModel()
             {
                 FileName = name,
-                
                 Data = UpdatedData,
                 LastUpdated = DateTime.Now,
                 LastEditedBy = textfile.LastEditedBy
-
             });
         }
 

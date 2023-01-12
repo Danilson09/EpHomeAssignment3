@@ -70,41 +70,40 @@ namespace WebApplication1.Controllers
             var ogFile = Service.GetFileEntry(FileID);
             CreateViewModel CreateViewModel = new CreateViewModel()
             {
+                FileName = ogFile.FileName,
                 Data = ogFile.Data
             };
             return View(CreateViewModel);
         }
         [HttpPost]
-        //[Authorize]
-        public IActionResult EditFile(Guid FileID, string UpdatedData, CreateViewModel CreateViewModel)
+
+        public IActionResult EditFile(Guid FileID, string changedata, CreateViewModel createView)
         {
-            var CurrentUser = User.Identity.Name;
             try
             {
-                if (textFileDBrepository.GetPermissions().Where(x => x.FileName == FileID && x.UserName == CurrentUser && x.Permissions == true).FirstOrDefault() != null)
+                if (textFileDBrepository.GetPermissions().Where(x => x.FileName == FileID && x.UserName == User.Identity.Name && x.Permissions == true).FirstOrDefault() != null)
                 {
-                    CreateViewModel.FileName = FileID;
-                    CreateViewModel.LastEditedBy = User.Identity.Name;
-                    CreateViewModel.Data = UpdatedData;
-                    Service.EditFile(FileID,UpdatedData,CreateViewModel);
-
-
-                    ViewBag.Message = "Updated";
+                    createView.FileName = FileID;
+                    createView.LastEditedBy = User.Identity.Name;
+                    changedata = createView.Data;
+                    
+                    Service.EditFile(FileID, changedata, createView);
                 }
                 else
                 {
-                    throw new Exception("Not updated");
+                    throw new Exception("No permission to edit");
 
                 }
             }
 
             catch (Exception ex)
             {
-                ViewBag.Error = "Not Updated";
-
                 
+                ViewBag.Error = "File was not updated";
+               
             }
             return RedirectToAction("List");
         }
+    
     }
 }

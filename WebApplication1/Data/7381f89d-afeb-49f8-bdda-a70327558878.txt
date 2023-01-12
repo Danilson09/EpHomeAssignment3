@@ -1,0 +1,73 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import { VeterinaryApp } from '../VeterniaryApp';
+import { AppointmentService } from '../services/appointment.services';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-update-component',
+  templateUrl: './update-component.component.html',
+  styleUrls: ['./update-component.component.css']
+
+})
+export class UpdateComponentComponent implements OnInit {
+  AppointmentForm!: FormGroup;
+  Appointments!: VeterinaryApp
+
+
+
+
+  constructor(private formBuilder: FormBuilder,private appointmentService:AppointmentService,private router:ActivatedRoute) {
+
+   }
+
+   ngOnInit(): void {
+
+    this.AppointmentForm = new FormGroup({
+      patientName: new FormControl,
+      animalType: new FormControl,
+      ownerIdCardNumber: new FormControl,
+      ownerName: new FormControl,
+      ownerSurname: new FormControl,
+      ownerContactNumber: new FormControl,
+      appointmentDate: new FormControl,
+      appointmentTime: new FormControl,
+      appointmentDuration: new FormControl,
+      reasonForAppointment: new FormControl,
+      vetNotes: new FormControl
+    })
+
+
+    
+   this.appointmentService.getAppointmentByID(this.router.snapshot.params['id']).subscribe((result)=>{
+      console.warn(this.router.snapshot.params['id'])
+      this.AppointmentForm = new FormGroup({
+        patientName: new FormControl(result["patientName"]),
+        animalType: new FormControl(result ["animalType"]),
+        ownerIdCardNumber: new FormControl(result["ownerIdCardNumber"]),
+        ownerName: new FormControl(result["ownerName"]),
+        ownerSurname: new FormControl(result["ownerSurname"]),
+        ownerContactNumber: new FormControl(result["ownerContactNumber"]),
+        appointmentDate: new FormControl(result["appointmentDate"]),
+        appointmentTime: new FormControl(result["appointmentTime"]),
+        appointmentDuration: new FormControl(result["appointmentDuration"]),
+        reasonForAppointment: new FormControl(result["reasonForAppointment"]),
+        vetNotes: new FormControl(result["vetNotes"])
+      })
+    })
+
+
+
+
+  }
+  submitForm(){
+    console.log(this.router.snapshot.params['id'])
+    this.Appointments = this.AppointmentForm.value
+    this.appointmentService.updateAppointment(this.Appointments,this.router.snapshot.params['id']).subscribe((res:VeterinaryApp) => {
+      
+    });
+    
+  }
+  
+
+}

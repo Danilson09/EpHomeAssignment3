@@ -61,7 +61,7 @@
                 @Html.DisplayFor(modelItem => item.Path)
             </td>
             <td>
-                @Html.ActionLink("Edit", "EditFile", new {id= item.FileName}) |
+                @Html.ActionLink("Edit", "EditFile", new { FileID=item.FileName }) |
                 @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
             </td>
