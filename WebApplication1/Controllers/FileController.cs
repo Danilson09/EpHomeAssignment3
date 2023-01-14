@@ -45,6 +45,7 @@ namespace WebApplication1.Controllers
                 {//C:\Users\User\Desktop\Enterprise\EpHomeAssignment\WebApplication1\Data\
                     string guidFileName = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(path.FileName);
                     string absolutePath = webHostEnvironment.ContentRootPath + @"\Data\" + guidFileName;
+                    //string absolutePath = webHostEnvironment.WebRootPath + @"\Data\" + guidFileName;
                     using (var destinationFile = System.IO.File.Create(absolutePath))
                     {
                         path.CopyTo(destinationFile);
